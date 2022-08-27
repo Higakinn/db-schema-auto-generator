@@ -3,10 +3,10 @@ services:
   mysql:
     image: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: test
-      MYSQL_USER: user
-      MYSQL_PASSWORD: pass
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - ./sql:/docker-entrypoint-initdb.d
   tbls:
@@ -17,4 +17,6 @@ services:
       - mysql
     restart: on-failure
     entrypoint: >
-      tbls doc mysql://root:root@mysql:3306/test
+      /bin/bash -c "
+        tbls doc mysql://${MYSQL_ROOT_USER}:${MYSQL_ROOT_PASSWORD}@mysql:3306/${MYSQL_DATABASE}
+      "

@@ -1,0 +1,22 @@
+version: '3'
+services:
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+  tbls:
+    image: ghcr.io/k1low/tbls
+    volumes:
+      - ./work/:/work
+    depends_on:
+      - mysql
+    restart: on-failure
+    entrypoint: >
+      /bin/bash -c "
+        tbls doc mysql://${MYSQL_ROOT_USER}:${MYSQL_ROOT_PASSWORD}@mysql:3306/${MYSQL_DATABASE}
+      "

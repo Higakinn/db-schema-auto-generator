@@ -1,0 +1,20 @@
+version: '3'
+services:
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+  tbls:
+    image: ghcr.io/k1low/tbls
+    volumes:
+      - ./work/:/work
+    depends_on:
+      - mysql
+    restart: on-failure
+    entrypoint: >
+      tbls doc mysql://root:root@mysql:3306/test

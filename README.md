@@ -1,0 +1,1 @@
+# db-schema-auto-generator
